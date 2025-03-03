@@ -296,18 +296,8 @@ Já vimos que os sistemas operacionais apresentam duas funções: abstrações p
 
 <center>
 
-```{mermaid}
-flowchart LR;
-    subgraph U["Usuário"]
-    A(Função <br> mkdir) --> B[Interface de Chamada de Sistema <br> sys_mkdir];
-    end
-    subgraph K["Kernel"]
-    B --> C[Manipulador de <br> Chamada de Sistema];
-    end
+![](images/chamada-de-sistema.png){width=50%}
 
-    style U fill:#ffffff
-    style K fill:#e4e4e4
-```
 </center>
 
 :::: columns
@@ -373,6 +363,9 @@ strace -c mkdir mynewdir
 ------ ----------- ----------- --------- --------- ----------------
 100.00    0.000000           0       111        45 total
 ```
+- A lista de chamadas existentes [aqui](https://www.chromium.org/chromium-os/developer-library/reference/linux-constants/syscalls/)
+- Para consultar no sistema operacional a página da mensagem `man 2 mkdir`
+
 
 ## Chamadas de sistema
 
