@@ -510,9 +510,10 @@ if pid < 0:
   sys.exit("Fork fail")
 
 print(f"Hello world!, process_id(pid) = {os.getpid()}\n")
-
-# Hello world!, process_id(pid) = 7534
-# Hello world!, process_id(pid) = 7536
+```
+```
+Hello world!, process_id(pid) = 7534
+Hello world!, process_id(pid) = 7536
 ```
 
 ### C++
@@ -530,9 +531,10 @@ int main()
 	printf("Hello world!, process_id(pid) = %d \n", getpid());
 	return 0;
 }
-
-// Hello world!, process_id(pid) = 685 
-// Hello world!, process_id(pid) = 686
+```
+```
+Hello world!, process_id(pid) = 685 
+Hello world!, process_id(pid) = 686
 ```
 :::
 
@@ -638,6 +640,14 @@ ln -s myfile1 myfile2
 
 ```
 
+## Diferenças entre links e links simbólicos^[<https://askubuntu.com/questions/108771/what-is-the-difference-between-a-hard-link-and-a-symbolic-link>]
+
+\
+
+- Soft Links (links simbólicos): Você pode fazer links para arquivos e diretórios. Se a cópia real for excluída, o link não funcionará.
+- Hard links (somente links): são apenas para arquivos; se a cópia real for excluída, o link funcionará, porque ele acessa os dados subjacentes que a cópia real estava acessando
+
+
 ## Alguns comandos úteis
 
 \
@@ -695,7 +705,7 @@ mv meuarquivo.txt novonome.txt
 cp meuarquivo.txt copiadoarquivo.txt
 
 # Copiar diretórios
-cp -r meudiretorio outro/lugar
+cp -r meudiretorio outro/luga
 ```
 
 ## Chamadas de sistema para gerenciamento diversos
@@ -728,16 +738,16 @@ kill <pid>
 
 Devo utilizar um valor octal para *usuário/grupo/outros*
 
-| Octal | Binário | Código de Proteção                 |     |
-|-------|---------|------------------------------------|-----|
-| 0     | 000     | Nenhuma permissão                  |`---`|          
-| 1     | 001     | Permissão de execução              |`--x`|
-| 2     | 010     | Permissão de escrita               |`-w-`|
-| 3     | 011     | Permissão de escrita e execução    |`-wx`|
-| 4     | 100     | Permissão de leitura               |`r--`|
-| 5     | 101     | Permissão de leitura e execução    |`r-x`|
-| 6     | 110     | Permissão de leitura e escrita     |`rw-`|
-| 7     | 111     | Todas as permissões                |`rwx`|
+| Octal |          Binario para Octal          | Binário | Código de Proteção                 |     |
+|-------|--------------------------------------|---------|------------------------------------|-----|
+| 0     |$0\times2^2 + 0\times2^1 + 0\times2^0$| 000     | Nenhuma permissão                  |`---`|          
+| 1     |$0\times2^2 + 0\times2^1 + 1\times2^0$| 001     | Permissão de execução              |`--x`|
+| 2     |$0\times2^2 + 1\times2^1 + 0\times2^0$| 010     | Permissão de escrita               |`-w-`|
+| 3     |$1\times2^2 + 1\times2^1 + 1\times2^0$| 011     | Permissão de escrita e execução    |`-wx`|
+| 4     |$1\times2^2 + 0\times2^1 + 0\times2^0$| 100     | Permissão de leitura               |`r--`|
+| 5     |$1\times2^2 + 0\times2^1 + 1\times2^0$| 101     | Permissão de leitura e execução    |`r-x`|
+| 6     |$1\times2^2 + 1\times2^1 + 0\times2^0$| 110     | Permissão de leitura e escrita     |`rw-`|
+| 7     |$1\times2^2 + 1\times2^1 + 1\times2^0$| 111     | Todas as permissões                |`rwx`|
 
 ```{.bash code-line-numbers="false"}
 # Permissão de escrita para o usuário (2) e nenhuma permissão para o grupo (0) e outros (0)
@@ -775,9 +785,16 @@ ls -l myfile
 
 - Neste modelo, o kernel é mínimo e [fornece apenas as funcionalidades básicas]{.marked}, como gerenciamento de memória, comunicação entre processos e escalonamento de CPU.
 - Funcionalidades adicionais, como sistemas de arquivos e drivers de dispositivos, são implementadas como processos de usuário que se comunicam com o kernel.
-- Exemplos incluem o MINIX e o Symbian.
+- Exemplos incluem MINIX, Symbian e Redox.
 
 *Desse modo, um erro no driver de áudio fará que o som fique truncado ou pare, [mas não derrubará o computador.]{.marked}*
+
+## Microkernel
+### Redox
+
+\
+
+> O [Redox OS](https://www.redox-os.org/) segue os princípios da filosofia Unix, integrando conceitos de [microkernel]{.blue}. [Isso significa que o núcleo do sistema apenas gerencia interações entre processos e recursos, enquanto funcionalidades adicionais são movidas para bibliotecas externas]{.marked}, que podem ser usadas tanto pelo kernel quanto por aplicativos de usuários. Um dos grandes diferenciais é que todos os drivers são executados no espaço de usuário, em ambientes isolados, o que aumenta a segurança e a estabilidade do sistema.^[<https://sempreupdate.com.br/linux/distribuicoes/lancamento-redox-os-0-9>]
 
 ## Híbrido
 
