@@ -1596,18 +1596,19 @@ if __name__ == "__main__":
 
 ### Conflitos entre threads sobre o uso de uma variável global
 
-\
-
 :::: columns
-::: {.column .fragment}
+::: {.column .fragment width=33%}
 Conflitos entre threads sobre o uso de uma variável
 global.
 ![](images/tanenbaum-02-19.png){width="90%"}
 :::
-::: {.column .fragment}
+::: {.column .fragment width=33%}
 Threads podem ter variáveis globais individuais.
 
 ![](images/tanenbaum-02-20.png){width="50%"}
+:::
+::: {.column .fragment width=33%}
+Thread 1 executa a chamada de sistema access para descobrir se ela tem permissão. A variável retorna a variável da resposta em *errno*. Contudo antes da thread ler a variável o escalanador troca para a thread 2. O thread 2 executa uma chamada open que falha, o que faz com que *errno* seja sobreescrito. Quando thread 1 retorna ele retorna com um valor errado.
 :::
 ::::
 
@@ -1615,9 +1616,24 @@ Threads podem ter variáveis globais individuais.
 
 > *O scheduling da CPU é a base dos sistemas operacionais multiprogramados. Alternando a CPU entre os processos, o sistema operacional pode tornar o computador mais produtivo.*
 
+## Scheduling ou escalonamento de CPU
+
+\
+
+ > Quando um computador é multiprogramado, ele frequentemente tem múltiplos processos ou threads competindo pela CPU ao mesmo tempo. Essa situação ocorre sempre que dois ou mais deles estão simultaneamente no estado de pronto. Se apenas uma CPU está disponível, [uma escolha precisa ser feita sobre qual qual processo será executado. A parte do sistema operacional que faz esta escolha é escalonador.]{.marked}
+
+## Comportamento do processo
+
+Quase todos os processos alternam entre períodos de computação intensa e solicitações de E/S (disco ou rede). A CPU executa cálculos por um tempo contínuo, até ser necessário realizar uma chamada de sistema para ler ou gravar em um arquivo. Após a conclusão dessa chamada, a CPU retoma os cálculos até que precise de mais dados ou precise gravar mais informações, repetindo o ciclo. Contudo, quando a CPU copia bits para a memória de vídeo para atualizar a tela, ela está realizando computação, não E/S, já que a CPU está ativa. E/S, nesse contexto, ocorre quando um processo entra em estado bloqueado, aguardando a conclusão de uma operação por um dispositivo externo.
+
+<center>
+![](images/tanenbaum-02-39.png){width=60%}
+</center>
+
+
+
+
 ## Ciclo de Picos de CPU e I/O
-
-
 
 :::: columns
 ::: {.column}
