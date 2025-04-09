@@ -2443,6 +2443,14 @@ A tecnologia Docker usa o kernel do Linux e funcionalidades do kernel, como cGro
 - [cGroups](https://access.redhat.com/documentation/pt-br/red_hat_enterprise_linux/8/html/managing_monitoring_and_updating_the_kernel/using-control-groups-through-a-virtual-file-system_setting-limits-for-applications): Você pode usar control groups (cgroups) para estabelecer limites, priorizar ou controlar o acesso aos recursos de hardware para grupos de processos. Isto permite que você controle granularmente o uso de recursos de aplicações para utilizá-los de forma mais eficiente. 
 - [namespaces](https://lwn.net/Articles/528078/): No contexto dos contêineres, isso significa que usuários e grupos podem ter privilégios para determinadas operações dentro do contêiner sem ter esses privilégios fora do contêiner. (Em outras palavras, o conjunto de capacidades de um processo para operações dentro de um namespace de usuário pode ser bem diferente de seu conjunto de capacidades no sistema host.)
 
+## Instalação do docker em um ambiente Debian
+
+\
+
+Para instalação do docker usando `apt`
+
+<https://docs.docker.com/engine/install/debian/#install-using-the-repository>
+
 ## *Puxar* uma imagem de um registro
 
 > Um registro (registry) de contêiner é um repositório — ou coleção de repositórios — usado para armazenar e acessar imagens de container.
