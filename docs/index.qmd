@@ -1624,14 +1624,11 @@ Thread 1 executa a chamada de sistema access para descobrir se ela tem permissã
 
 ## Comportamento do processo
 
-Quase todos os processos alternam entre períodos de computação intensa e solicitações de E/S (disco ou rede). A CPU executa cálculos por um tempo contínuo, até ser necessário realizar uma chamada de sistema para ler ou gravar em um arquivo. Após a conclusão dessa chamada, a CPU retoma os cálculos até que precise de mais dados ou precise gravar mais informações, repetindo o ciclo. Contudo, quando a CPU copia bits para a memória de vídeo para atualizar a tela, ela está realizando computação, não E/S, já que a CPU está ativa. E/S, nesse contexto, ocorre quando um processo entra em estado bloqueado, aguardando a conclusão de uma operação por um dispositivo externo.
+*Quase todos os processos alternam entre períodos de computação intensa e solicitações de E/S (disco ou rede).* A CPU executa cálculos por um tempo contínuo, até ser necessário realizar uma chamada de sistema para ler ou gravar em um arquivo. Após a conclusão dessa chamada, [a CPU retoma os cálculos até que precise de mais dados ou precise gravar mais informações, repetindo o ciclo.]{.marked} Contudo, quando a CPU copia bits para a memória de vídeo para atualizar a tela, ela está realizando computação, não E/S, já que a CPU está ativa. E/S, nesse contexto, ocorre quando um processo entra em estado bloqueado, aguardando a conclusão de uma operação por um dispositivo externo.
 
 <center>
 ![](images/tanenbaum-02-39.png){width=60%}
 </center>
-
-
-
 
 ## Ciclo de Picos de CPU e I/O
 
@@ -1655,7 +1652,7 @@ O sucesso do scheduling da CPU depende de uma propriedade observada nos processo
 
 \
 
-Sempre que a CPU se torna ociosa, o sistema operacional deve selecionar um dos processos na fila de prontos para ser executado. O processo de seleção é realizado pelo scheduler de curto prazo, ou scheduler da CPU. O scheduler seleciona um processo entre os processos na memória que estão prontos para execução e aloca a CPU a esse processo.
+Sempre que a CPU se torna ociosa, o sistema operacional deve selecionar um dos processos na fila de prontos para ser executado. O processo de seleção é realizado pelo scheduler da CPU. O scheduler seleciona um processo entre os processos na memória que estão prontos para execução e aloca a CPU a esse processo.
 
 ## Scheduling com Preempção (interrupção forçada de um processo)
 
@@ -1683,11 +1680,11 @@ Quando o scheduling ocorre apenas sob as circunstâncias 1 e 4, dizemos que o es
 
 \
 
-Outro componente envolvido na função de scheduling da CPU é o [despachante]{.blue}. O despachante [é o módulo que passa o controle da CPU ao processo selecionado pelo scheduler de curto prazo]{.marked}. Essa função envolve o seguinte:
+Outro componente envolvido na função de scheduling da CPU é o [despachante]{.blue}. O despachante [é o módulo que passa o controle da CPU ao processo selecionado pelo scheduler]{.marked}. Essa função envolve o seguinte:
 
 - Mudança de contexto
 - Mudança para a modalidade de usuário
-- Salto para a locação apropriada no programa do usuário para que ele seja reiniciado.
+- Salto para o local apropriado no programa do usuário para reiniciar o programa
 
 \
 
@@ -1715,41 +1712,81 @@ Diferentes algoritmos de scheduling da CPU têm diferentes propriedades, e a esc
 ::::
 
 ## Algoritmos de Scheduling
-
-\
-
 ### Scheduling "Primeiro-a-Chegar, Primeiro-a-Ser-Atendido"
 
 O algoritmo mais simples de scheduling da CPU é o algoritmo "primeiro-a-chegar, primeiro-a-ser-atendido" (FCFS – first-come, first-served). 
+
 - Nesse esquema, o processo que solicita a CPU primeiro é o primeiro a usá-la. 
 - Quando um processo entra na fila de prontos, seu PCB é conectado na cauda da fila. Quando a CPU está livre, ela é alocada ao processo na cabeça da fila.
 - O lado negativo é que o tempo médio de espera na política FCFS geralmente é bem longo.
 
+```{mermaid}
+gantt
+    title Primeiro-a-Chegar, Primeiro-a-Ser-Atendido 
+    dateFormat  SS
+    axisFormat %SS
+    tickInterval 1second
+    P1: p1, 0, 24s
+    P2: p2, after p1, 3s
+    P3: after p2, 3s
+```
+
 ## Algoritmos de Scheduling
-
-\
-
 ### Scheduling Menor-Job-Primeiro
 
 Esse algoritmo associa a cada processo a duração do próximo pico de CPU do processo. Quando a CPU está disponível, ela é atribuída ao processo que tem o próximo pico de CPU mais curto
 
+```{mermaid}
+gantt
+    title Menor-Job-Primeiro
+    dateFormat  SS
+    axisFormat %SS
+    tickInterval 1second
+    P4: p4, 0, 3s
+    P1: p1, after p4, 6s
+    P3: p3, after p1, 7s
+    P2: p2, after p3, 8s
+```
+
 ## Algoritmos de Scheduling
-
-\
-
 ### Scheduling por Prioridades
 
 Uma prioridade é associada a cada processo, e a CPU é alocada ao processo com a prioridade mais alta. Processos com prioridades iguais são organizados no schedule em ordem FCFS. O algoritmo SJF é simplesmente um algoritmo por prioridades em que a prioridade (p) é o inverso do próximo pico de CPU (previsto). Quanto maior o pico de CPU, menor a prioridade, e vice-versa.
 
+```{mermaid}
+gantt
+    title Scheduling por Prioridades (p)
+    dateFormat  SS
+    axisFormat %SS
+    tickInterval 1second
+    P2 (1): p2, 0, 1s
+    P5 (2): p5, after p2, 5s
+    P1 (3): p1, after p5, 10s
+    P3 (4): p3, after p1, 2s
+    P4 (5): p4, after p3, 1s
+```
+
 ## Algoritmos de Scheduling
-
-\
-
 ### Scheduling Round-Robin
 
 O scheduler da CPU seleciona o primeiro processo da fila de prontos, define um timer com interrupção após 1 quantum de tempo e despacha o processo.
 
 Portanto, uma entre duas coisas ocorrerá. O processo pode ter um pico de CPU menor do que 1 quantum de tempo. Nesse caso, o próprio processo liberará a CPU voluntariamente. O scheduler passará então para o próximo processo na fila de prontos. Se o pico de CPU do processo em execução corrente for maior do que 1 quantum de tempo, o timer será desligado e causará uma interrupção para o sistema operacional. Uma mudança de contexto será executada e o processo será inserido na cauda da fila de prontos. O scheduler da CPU selecionará então o próximo processo na fila de prontos.
+
+```{mermaid}
+gantt
+    title Round-Robin
+    dateFormat  SS
+    axisFormat %SS
+    tickInterval 1second
+    P1: p1, 0, 4s
+    P2: p2, after p1, 3s
+    P3: p3, after p2, 3s
+    P1: p11, after p3, 4s
+    P1: p12, after p11, 4s
+    P1: p13, after p12, 4s
+    P1: p14, after p13, 4s
+```
 
 # Gerenciamento de memória
 
@@ -2210,8 +2247,6 @@ A finalidade da camada do driver de dispositivos é ocultar, do subsistema de I/
 
 Infelizmente para os fabricantes de hardware de dispositivos, cada tipo de sistema operacional tem seus próprios padrões para a interface dos drivers de dispositivos.
 
-<!-- Configuração do Linux -->
-
 # Instalação e Configuração do Linux
 
 ## [Instalação via WSL](https://learn.microsoft.com/pt-br/windows/wsl/install)
@@ -2536,22 +2571,4 @@ Outros comandos
 - A lista completa poderá ser visualizada aqui <https://docs.docker.com/reference/dockerfile/>
 
 Usar o comando: `docker build -t alpine-new` para recriar a imagem a partir das alterações no `Dockerfile`
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
