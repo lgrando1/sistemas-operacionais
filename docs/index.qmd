@@ -23,7 +23,7 @@ self-contained: true
 
 > [A função do [sistema operacional]{.blue} é fornecer aos programas do usuário um modelo do computador melhor]{.marked}, mais simples e mais limpo, assim como lidar com o gerenciamento de todos os recursos mencionados. *A maioria dos computadores tem dois modos de operação: [modo núcleo e modo usuário.]{.blue}*
 
-## Fundamentos de Sistemas Operacionais
+## Sistemas Operacionais
 
 :::: columns
 ::: {.column width="40%"}
@@ -169,6 +169,7 @@ Os resgistradores são importantes por causa da [multiplexação de tempo da CPU
 ::: {.column width="30%"}
 
 ### Memória 
+
 > *É o segundo principal componente em qualquer computador, o qual deve ser rápido ao extremo (mais rápida do que executar uma instrução, de maneira que a CPU não seja atrasada pela memória).*
 :::
 ::: {.column width="70%"}
@@ -1054,6 +1055,117 @@ O nível mais baixo de um sistema operacional estruturado em processos controla 
 ![Alguns dos campos de uma entrada típica na tabela de processos](images/tanenbaum-02-04.png)
 :::
 ::::
+
+## Comando `top`
+
+Com o comando `top` podemos ter várias informações sobre os processos:
+
+```
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                              
+ 2153 root      20   0  192020  50716  10752 S   1.3  0.2   0:24.52 jupyterhub                           
+  350 eee_W_3+  20   0   34760   9992   5504 S   0.3  0.0   0:00.35 vim                                  
+ 1050 eee_W_3+  20   0  321276  68720  16192 S   0.3  0.2   0:01.28 jupyterhub-sing                      
+ 1072 eee_W_3+  20   0  856432  67460  14456 S   0.3  0.2   0:00.67 python3.11                           
+ 1202 mysql     20   0 1944024 172192  19812 S   0.3  0.5   1:11.94 mysqld                               
+ 1824 root      20   0 1510756  22280  13592 S   0.3  0.1   0:52.81 docker-containe                      
+ 2403 root      20   0 3286184  53932  19520 S   0.3  0.2   0:17.24 tty.js                               
+ 2964 root      20   0 1238252  40832  14912 S   0.3  0.1   1:16.43 node                                 
+ 3238 eee_W_3+  20   0   34736   9992   5484 S   0.3  0.0   0:00.03 vim                                      
+```
+
+- PID: identificador do processo
+- USER: usuário
+- %CPU: percentual de CPU utilizado
+- %MEM: percentual de memória utilizado
+- COMMAND: comando que deu origem ao processo
+
+## Comando `top`
+
+Na parte do cabeçário da saída do comando são apresentadas estas informações:
+
+```
+top - 13:21:02 up  8:36,  0 users,  load average: 0.21, 0.22, 0.25
+Tasks: 583 total,   1 running, 581 sleeping,   0 stopped,   1 zombie
+%Cpu(s):  0.4 us,  0.1 sy,  0.0 ni, 99.5 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem : 32127716 total, 22673544 free,  4059152 used,  5395020 buff/cache
+KiB Swap:        0 total,        0 free,        0 used. 27328092 avail Mem 
+```
+- Há 583 processos, sendo que 1 está *running*, 581 *sleeping*, 0 *stopped* e 1 *zombie*
+- Sobre a CPU: 0,4% utilizado na camada de usuário (us), 0,1% na camada do kernel (sy), 99.5 não está sendo feito nada (id) e 0% esperando por I/O (wa)
+
+## Comando `top`
+
+Significado dos status:
+
+- *D (sono ininterrupto)*: O processo está aguardando um evento, como a conclusão de uma operação de E/S, e não pode ser interrompido.
+- *R (em execução)*: O processo está sendo executado pelo processador.
+- *S (sono)*: O processo está aguardando um evento, mas pode ser interrompido por sinais.
+- *T (rastreado ou parado)*: O processo foi suspenso ou está sendo depurado.
+- *Z (zumbi)*: O processo terminou sua execução, mas ainda não foi removido da tabela de processos pelo sistema operacional.
+
+## Comando `top`
+
+\
+
+- `top -c` Mostra a linha de comando ao invés do nome do programa
+- `top -d <num>` Atualiza a tela após num segundos
+- `top -p <pid>` Mostra apenas o processo com o PID especificado
+- `top -u <user>` Monitora os processos em execução de um determinado usuário
+
+## Processo zombie
+
+\
+
+> *Um Zombie Process é criado quando um processo filho termina antes do processo pai e o pai não verifica o status de saída do filho.*
+
+::: {.columns}
+::: {.column}
+
+```{.c}
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
+int main(void)
+{
+    pid_t pid;
+    int status;
+
+    if ((pid = fork()) < 0) {
+        perror("fork");
+        exit(1);
+    }
+
+    /* Child */
+    if (pid == 0)
+        exit(0);
+
+    /* Parent
+     * Gives you time to observe the zombie using ps(1) ... */
+    sleep(100);
+
+    /* ... and after that, parent wait(2)s its child's
+     * exit status, and prints a relevant message. */
+    pid = wait(&status);
+    if (WIFEXITED(status))
+        fprintf(stderr, "\n\t[%d]\tProcess %d exited with status %d.\n",
+                (int) getpid(), pid, WEXITSTATUS(status));
+
+    return 0;
+}
+```
+:::
+::: {.column}
+**Ao lado temos uma rotina para a criação de um zombie.**^[<https://stackoverflow.com/questions/25172425/create-zombie-process>] Para identificar o processo zombie, podemos utilizar o comando `ps <pid do filho>` ou o comando `top` ao clicar na letra `o` e filtrar com `S=Z`. No exemplo foi utilizado `ps 7246`
+
+```
+  PID TTY      STAT   TIME COMMAND
+ 7246 pts/49   Z      0:00 [a.out] <defunct>
+```
+:::
+:::
 
 # Scheduling de Processos
 
