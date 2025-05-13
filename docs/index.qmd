@@ -1736,7 +1736,7 @@ Thread 1 executa a chamada de sistema access para descobrir se ela tem permissã
 
 ## Comportamento do processo
 
-*Quase todos os processos alternam entre períodos de computação intensa e solicitações de E/S (disco ou rede).* A CPU executa cálculos por um tempo contínuo, até ser necessário realizar uma chamada de sistema para ler ou gravar em um arquivo. Após a conclusão dessa chamada, [a CPU retoma os cálculos até que precise de mais dados ou precise gravar mais informações, repetindo o ciclo.]{.marked} Contudo, quando a CPU copia bits para a memória de vídeo para atualizar a tela, ela está realizando computação, não E/S, já que a CPU está ativa. E/S, nesse contexto, ocorre quando um processo entra em estado bloqueado, aguardando a conclusão de uma operação por um dispositivo externo.
+*Quase todos os processos alternam entre períodos de computação intensa e solicitações de E/S (disco ou rede).* A CPU executa cálculos por um tempo contínuo, até ser necessário realizar uma chamada de sistema para ler ou gravar em um arquivo. Após a conclusão dessa chamada, [a CPU retoma os cálculos até que precise de mais dados ou precise gravar mais informações, repetindo o ciclo.]{.marked}.
 
 <center>
 ![](images/tanenbaum-02-39.png){width=60%}
