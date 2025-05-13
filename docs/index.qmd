@@ -1116,7 +1116,7 @@ Significado dos status:
 
 \
 
-> *Um Zombie Process é criado quando um processo filho termina antes do processo pai e o pai não verifica o status de saída do filho.*
+> *Um Processo Zombie é criado quando um processo filho termina antes do processo pai e o pai não verifica o status de saída do filho.*
 
 ::: {.columns}
 ::: {.column}
@@ -2684,3 +2684,23 @@ Outros comandos
 
 Usar o comando: `docker build -t alpine-new` para recriar a imagem a partir das alterações no `Dockerfile`
 
+## Dockerhub
+
+\
+
+Como mencionado anteriormente, quando baixamos uma image usando *pull*, estamos obtendo esta imagem de um *registry* que no caso do docker o padrão é o  [dockerhub](https://hub.docker.com/). Para logar neste registro e poder enviar as nossas próprias imagens (`push`), devemos utilizar o comando `docker login -u <user> -p <password>` e em seguida `docker push <tag>`.
+
+# AWS
+
+## Criação do EC2 e instalação do Docker
+
+\
+
+{{< video https://www.youtube.com/watch?v=XaFOJSh9riA width="85%" height="70%" >}}
+
+
+## Conectar o VSCode no EC2
+
+\
+
+{{< video https://www.youtube.com/watch?v=ANmCuVynSDw width="85%" height="70%" >}}
