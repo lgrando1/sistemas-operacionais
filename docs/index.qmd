@@ -2078,13 +2078,23 @@ Funciona bem em um sistema de multiprogramação, com pedaços e partes de muito
 
 > *O objetivo da tabela de páginas é mapear as páginas virtuais em quadros de páginas.*
 
+::: columns
+::: {.column width=40%}
 - Estrutura de uma entrada da tabela de páginas: 
 
 <center>
-![](images/tanenbaum-03-11.png){width="50%"}
+![](images/tanenbaum-03-11.png){width="90%"}
 </center>
+:::
 
-- O campo mais importante é o Número do quadro de página. Afinal, a meta do mapeamento de páginas é localizar esse valor.
+::: {.column width=60%}
+- O campo mais importante é o número do quadro de página. Afinal, a meta do mapeamento de páginas é localizar esse valor.
+- A informação presente/ausente, se for 1 a entrada pode ser usada, se for 0 a pagina virtual não está na memória
+- A proteção diz que tipos de acessos são permitidos
+- Modificada se refere a uma página que foi atualizada e indica se precisa alterar em disco
+- Referenciada é se uma página esta sendo usada ou para leitura ou para escrita
+:::
+:::
 
 ## TLB (Translation Lookaside Buffers) ou memória Associativa
 
