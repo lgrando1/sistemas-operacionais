@@ -144,11 +144,109 @@ A CPU, memória e dispositivos de E/S estão todos conectados por um [sistema de
 
 > *O "cérebro" do computador é a CPU. O ciclo básico de toda CPU é buscar a primeira instrução da memória, decodificá-la para determinar o seu tipo e operandos, executá-la.*
 
+## Processadores (ciclo)
+
+\
+
+::: {.columns}
+::: {.column width=60%}
+![Fonte: <https://materialpublic.imd.ufrn.br/curso/disciplina>](images/ciclo_da_cpu-01.jpg){width="110%"}
+:::
+::: {.column width=40%}
+[Endereçamento da próxima instrução a ser executada:]{.blue} A instrução é endereçada através do envio do conteúdo do Contador de Programa (PC), que está localizado na Unidade de Controle (UC), para a memória de instruções. Esse conteúdo representa o endereço da próxima instrução a ser executada. 
+:::
+:::
+
+## Processadores (ciclo)
+
+\
+
+::: {.columns}
+::: {.column width=60%}
+![Fonte: <https://materialpublic.imd.ufrn.br/curso/disciplina>](images/ciclo_da_cpu-02.jpg){width="120%"}
+:::
+::: {.column width=40%}
+[Leitura da instrução da memória de instruções:]{.blue} a memória faz a leitura de uma palavra de instrução.
+:::
+:::
+
+## Processadores (ciclo)
+
+\
+
+::: {.columns}
+::: {.column width=60%}
+![Fonte: <https://materialpublic.imd.ufrn.br/curso/disciplina>](images/ciclo_da_cpu-03.jpg){width="120%"}
+:::
+::: {.column width=40%}
+[Escrita da instrução no registrador de instruções:]{.blue} a instrução lida é escrita dentro do processador no registrador de instruções. No nosso exemplo, o valor da instrução lida é 1B
+:::
+:::
+
+## Processadores (ciclo)
+
+\
+
+::: {.columns}
+::: {.column width=60%}
+![Fonte: <https://materialpublic.imd.ufrn.br/curso/disciplina>](images/ciclo_da_cpu-04.jpg){width="110%"}
+:::
+::: {.column width=40%}
+[Decodificação dos operandos:]{.blue} a instrução é decodificada, ou seja, o processador passa a conhecer qual é a instrução (que operação ela executa) e quais são os operandos.
+
+\
+
+O decodificador é um componente de hardware fundamental sendo [responsável por traduzir as instruções em linguagem de máquina (binário) em sinais de controle que o processador entende e executa.]{.marked}
+:::
+:::
+
+## Processadores (ciclo)
+
+\
+
+::: {.columns}
+::: {.column width=60%}
+![Fonte: <https://materialpublic.imd.ufrn.br/curso/disciplina>](images/ciclo_da_cpu-05.jpg){width="120%"}
+:::
+::: {.column width=40%}
+[Leitura dos operandos da memória ou dos registradores:]{.blue} os operandos fonte (dados que serão utilizados para efetuar a operação na ULA) são lidos da memória ou dos registradores e colocados nas entradas da ULA.
+:::
+:::
+
+## Processadores (ciclo)
+
+\
+
+::: {.columns}
+::: {.column width=60%}
+![Fonte: <https://materialpublic.imd.ufrn.br/curso/disciplina>](images/ciclo_da_cpu-06.jpg){width="120%"}
+:::
+::: {.column width=40%}
+[Execução da instrução:]{.blue} quando a ULA recebe os operandos fonte, então o próximo passo será a execução da operação através da ULA.
+:::
+:::
+
+## Processadores (ciclo)
+
+\
+
+::: {.columns}
+::: {.column width=60%}
+![Fonte: <https://materialpublic.imd.ufrn.br/curso/disciplina>](images/ciclo_da_cpu-07.jpg){width="120%"}
+:::
+::: {.column width=40%}
+[Escrita do resultado:]{.blue} a saída da ULA, que contém o resultado da operação que acabou de ser executada, é escrita no operando destino, que pode estar em algum registrador ou na memória.
+:::
+:::
+
+
+## Processadores
+
 \
 
 :::: columns
 ::: {.column width="33%" .fragment}
-[Cada CPU tem um conjunto específico de instruções]{.marked} que ela consegue executar. *Desse modo, um processador x86 não pode executar programas ARM.*
+[Cada CPU tem um conjunto específico de instruções]{.marked} que ela consegue executar. *Desse modo, um processador x86 não pode executar programas ARM.* Exemplo: [Instruções lógicas x86 (AND, OR, XOR, NOT) podem operar diretamente em endereços de memória, enquanto o ARM é load/store, exigindo mover dados para registradores antes da operação.]{.marked}
 
 :::
 ::: {.column width="33%" .fragment}
