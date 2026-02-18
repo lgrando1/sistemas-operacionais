@@ -315,11 +315,11 @@ O resultado é um uso eficiente das operações no cache, [mantendo os dados nas
 ## O zoológico dos sistemas operacionais
 
 - Sistemas operacionais de computadores de grande porte, [de alto desempenho e alta disponibilidade]{.marked} [(*mainframes*)](https://www.youtube.com/watch?v=HiQOBAEfZmQ&t=119s)
-- Sistemas operacionais de servidores
+- [Sistemas operacionais de servidores](https://top500.org/lists/top500/2025/11/)
 - Sistemas operacionais de computadores pessoais
 - Sistemas operacionais de computadores portáteis
 - Sistemas operacionais embarcados
-- Sistemas operacionais de tempo real
+- [Sistemas operacionais de tempo real](https://developer.sony.com/posts/apache-nuttx-powers-worlds-smallest-lunar-robot-in-japans-historic-autonomous-lunar-exploration-mission)
 
 ## Conceitos de sistemas operacionais
 
