@@ -370,7 +370,11 @@ Contudo o byte é uma das menores unidades de memória usadas nos computadores e
 
 \
 
-Um programa são números
+::: {.columns}
+::: {.column width="35%"}
+Um programa são apenas números que podem estar salvos em um arquivo .txt
+
+\
 
 ```{filename="ok.txt"}
 7F454C460101010000000000
@@ -386,11 +390,8 @@ B801000000BB00000000CD80
 \
 
 7F = 1 byte
-
-## Conceitos de sistemas operacionais
-
-\
-
+:::
+::: {.column width="65%"}
 Trasformando em binário executável
 
 ```{.bash}
@@ -398,8 +399,6 @@ xxd -p -r ok.txt > ok
 chmod +x ok
 ./ok
 ```
-
-\
 
 Visualizando o conteúdo
 
@@ -418,9 +417,17 @@ xxd -c 12 -g 1 ok
 00000054: b8 01 00 00 00 bb 00 00 00 00 cd 80  ............
 ```
 
-## Conceitos de sistemas operacionais
+:::
+:::
+
+## Conceitos de sistemas operacionais {.smaller}
 
 \
+
+::: {.columns}
+::: {.column}
+
+É possível editar o arquivo utilizando o programa `hexedit`
 
 ```{.bash}
 hexedit ok
@@ -436,6 +443,14 @@ hexedit ok
 00000048   0C 00 00 00  05 00 00 00  00 10 00 00  ............
 00000054   B8 01 00 00  00 BB 01 00  00 00 CD 80  ............
 ```
+:::
+::: {.column}
+
+[O cabeçalho ELF (Executable and Linkable Format) é a estrutura inicial de arquivos binários no Linux]{.blue}, funcionando como um "cartão de visitas" que informa ao sistema operacional como carregar e executar o programa. [Ele contém metadados essenciais, incluindo o tipo de arquivo, a arquitetura da máquina (32/64 bits) e o ponto de entrada de execução.]{.marked}
+
+\
+
+A ultima linha `B8 01 00 00  00 BB 01 00  00 00 CD 80` contém as [instruções do programa.]{.blue} 
 
 - B8: MOV EAX
 - 01 00 00 00: 1 (chamada de sistema de número 1 sys_exit)
@@ -443,6 +458,9 @@ hexedit ok
 - 00 00 00 00: 0 (código de status de saída)
 - CD: INT
 - 80: 0x80 (instrução de invocação da chamada de sistema)
+:::
+:::
+
 
 
 ## Chamadas de sistema
