@@ -599,9 +599,9 @@ Os desenvolvedores de aplicações projetam programas de acordo com uma interfac
 :::: columns
 ::: {.column}
 
-- Uso da função `write` em `C++`
+- Uso da função `write` em `C`
 
-```{.cpp filename="write.cpp" code-line-numbers="1|3-6"}
+```{.c filename="write.c" code-line-numbers="1|3-6"}
 #include<unistd.h>
 
 int main() 
@@ -612,7 +612,7 @@ int main()
 :::
 ::: {.column}
 - Nas linguagens de programação C e C++, `unistd.h` é o nome do arquivo de cabeçalho que fornece acesso à API do sistema operacional [POSIX]{.blue}.
-- Compilar: `g++ write.cpp`
+- Compilar: `gcc write.c`
 - Executar: `./a.out`
 :::
 ::::
@@ -634,6 +634,15 @@ exit_group(0)                           = ?
 +++ exited with 0 +++
 ```
 
+::: {.callout-note title="Grep"}
+O comando `grep` no Linux é uma ferramenta poderosa para buscar padrões de texto dentro de arquivos ou na saída de outros comandos. Exemplos essenciais incluem pesquisar uma palavra (`grep "termo" arquivo`)
+
+- Ignorar maiúsculas/minúsculas (case insensitive): `grep -i "erro" arquivo.log`
+- Buscar recursivamente em diretórios: `grep -r "config" /etc/`
+- Mostrar número da linha: `grep -n "padrão" arquivo.txt`
+- Contar ocorrências: `grep -c "erro" arquivo.log`
+:::
+
 ## Chamada de sistema
 
 \
@@ -642,7 +651,7 @@ No fim das contas um `printf` realiza a mesma chamada de sistema `write`
 
 :::: columns
 ::: {.column}
-```{.cpp filename="write.cpp" code-line-numbers="1|3-6"}
+```{.c filename="write.c" code-line-numbers="1|3-6"}
 #include<stdio.h>
 
 int main() 
@@ -676,7 +685,79 @@ cat trace.txt | grep -A 5 write
 ```
 
 - Será realizada a chamada de sistema `write`?
-- Comparar com as chamadas de sistema feitas com `C++`
+- Comparar com as chamadas de sistema feitas com `C`
+
+## Chamada de sistema {.smaller}
+
+\
+
+Aqui um exemplo de como o `strace` pode detectar um erro em uma chamada de sistema. No primeiro caso a `pasta` não estava vazia, então a função `rmdir pasta` para remover a pasta produz um erro. No segundo caso a pasta estava vazia então o comando executou sem erros. Comando `strace -c rmdir pasta`.
+
+::: {.columns}
+::: {.column}
+```
+rmdir: failed to remove 'pasta': Directory not empty
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- --------------
+ 43.50    0.000184           6        30        12 openat
+ 17.49    0.000074           3        22           mmap
+ 14.18    0.000060           3        20           close
+ 10.64    0.000045           2        18           fstat
+  8.98    0.000038           9         4           write
+  5.20    0.000022          22         1         1 rmdir # <1>
+  0.00    0.000000           0         3           read
+  0.00    0.000000           0         3           mprotect
+  0.00    0.000000           0         1           munmap
+  0.00    0.000000           0         3           brk
+  0.00    0.000000           0         2           pread64
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         1           arch_prctl
+  0.00    0.000000           0         1           futex
+  0.00    0.000000           0         1           set_tid_address
+  0.00    0.000000           0         1           set_robust_list
+  0.00    0.000000           0         1           prlimit64
+  0.00    0.000000           0         1           getrandom
+  0.00    0.000000           0         1           rseq
+------ ----------- ----------- --------- --------- --------------
+100.00    0.000423           3       116        14 total
+```
+
+1. Erro na chamada de sistema `rmdir`
+:::
+::: {.column}
+```
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- --------------
+ 35.60    0.000267           8        30        12 openat
+ 22.93    0.000172           7        22           mmap
+ 17.87    0.000134         134         1           rmdir #<2>
+ 14.13    0.000106           5        20           close
+  9.47    0.000071           3        18           fstat
+  0.00    0.000000           0         3           read
+  0.00    0.000000           0         3           mprotect
+  0.00    0.000000           0         1           munmap
+  0.00    0.000000           0         3           brk
+  0.00    0.000000           0         2           pread64
+  0.00    0.000000           0         1         1 access
+  0.00    0.000000           0         1           execve
+  0.00    0.000000           0         1           arch_prctl
+  0.00    0.000000           0         1           futex
+  0.00    0.000000           0         1           set_tid_address
+  0.00    0.000000           0         1           set_robust_list
+  0.00    0.000000           0         1           prlimit64
+  0.00    0.000000           0         1           getrandom
+  0.00    0.000000           0         1           rseq
+------ ----------- ----------- --------- --------- --------------
+100.00    0.000750           6       112        13 total
+```
+
+2. Chamada de sistema ``rmdir`` sem erro
+:::
+:::
+
+[Por conta do erro uma outra chamada de sistema foi requisita. Por que?]{.marked}
 
 ## Chamadas de sistema
 
@@ -718,8 +799,8 @@ Hello world!, process_id(pid) = 7534
 Hello world!, process_id(pid) = 7536
 ```
 
-### C++
-```{.cpp filename="fork_exemplo.cpp" code-line-numbers="|2|6|11|15-16"}
+### C
+```{.c filename="fork_exemplo.c" code-line-numbers="|2|6|11|15-16"}
 #include <stdio.h>
 #include <unistd.h>
 
@@ -762,8 +843,8 @@ else:
   print(f"{i}, process_id(pid) child = {pid}, waitpid = {waitpid_return}\n")
 ```
 
-### C++
-```{.cpp filename="waitpid_exemplo.cpp" code-line-numbers="1-6|9-10|13-16|18-21"}
+### C
+```{.c filename="waitpid_exemplo.c" code-line-numbers="1-6|9-10|13-16|18-21"}
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -794,8 +875,8 @@ int main ()
 ### `execve`
 
 ::: {.panel-tabset}
-### C++
-```{.cpp filename="execve.cpp"}
+### C
+```{.c filename="execve.c"}
 #include <unistd.h>
 #include <iostream>
 #include <string>
@@ -1144,7 +1225,7 @@ Após um processo ter sido criado, ele começa a ser executado e realiza qualque
 Exemplos:
 
 1. `ctrl + c` para interromper programas ou processos no primeiro plano
-2. `!g++ foo.cpp` e `foo.cpp` não existe no diretório
+2. `!gcc foo.c` e `foo.c` não existe no diretório
 3. Um Erro interno do processo que afeta seu funcionamento, então o usuário é avisado e o programa termina
 4. `kill <pid>`
 :::
@@ -2652,14 +2733,14 @@ sudo apt install <nome do pacote>
 \
 
 - `neovim` editor de código
-- `g++` compilador de código `c++`
+- `gcc` compilador de código `C`
 - `tmux` permite que várias sessões de terminal sejam acessadas simultaneamente em uma única janela
 - `wget` permite fazer download de conteúdos da web
 
 Para instalar todos eles de uma vez
 
 ```{.bash filename="$"}
-sudo apt install neovim g++ tmux wget
+sudo apt install neovim gcc tmux wget
 ```
 
 # Usando vi/vim/neovim
