@@ -2681,7 +2681,7 @@ wsl --install -d <nome da distribuição>
 No PowerShell execute o comando para poder acessar o usuário `root`:
 
 ```{.bash filename="PowerShell"}
-wsl --install -d <nome da distribuição> -u <nome do usuário>
+wsl -d <nome da distribuição> -u <nome do usuário>
 ```
 
 Por exemplo caso tenha instalado o Debian, será `-d Debian`
