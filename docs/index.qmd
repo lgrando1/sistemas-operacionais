@@ -1050,6 +1050,19 @@ ls -l myfile
 -rw-r-----  1 thop  staff  0 27 Mar 16:18 myfile
 ```
 
+## Criando novos usuários e grupos
+
+\
+
+```{.bash}
+sudo su # acessar o usuário root
+sudo adduser nome_do_usuario # criar um novo usuário
+su - nome_do_usuario # logar com outro usuário
+sudo groupadd nome_do_grupo # criar um novo grupo
+sudo usermod -aG nome_do_grupo nome_do_usuario # adicionar um usuário ao grupo
+```
+
+
 # Estruturas do Sistema Operacional
 
 > *Os sistemas operacionais podem ser organizados de várias maneiras, dependendo de sua estrutura interna e de como eles gerenciam os recursos do computador.*
