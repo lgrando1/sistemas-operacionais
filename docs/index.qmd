@@ -1416,40 +1416,38 @@ Significado dos status:
 ::: {.columns}
 ::: {.column}
 
-```{.c}
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+```{.python}
+import os
+import sys
+import time
 
-int main(void)
-{
-    pid_t pid;
-    int status;
 
-    if ((pid = fork()) < 0) {
-        perror("fork");
-        exit(1);
-    }
+def main() -> int:
+    try:
+        pid = os.fork()
+    except OSError as err:
+        print(f"fork: {err}", file=sys.stderr)
+        return 1
 
-    /* Child */
-    if (pid == 0)
-        exit(0);
+    # Child
+    if pid == 0:
+        os._exit(0)
 
-    /* Parent
-     * Gives you time to observe the zombie using ps(1) ... */
-    sleep(100);
+    # Parent: gives you time to observe the zombie using ps(1) ...
+    time.sleep(100)
 
-    /* ... and after that, parent wait(2)s its child's
-     * exit status, and prints a relevant message. */
-    pid = wait(&status);
-    if (WIFEXITED(status))
-        fprintf(stderr, "\n\t[%d]\tProcess %d exited with status %d.\n",
-                (int) getpid(), pid, WEXITSTATUS(status));
+    # ... and after that, parent waits child exit status and prints a message.
+    child_pid, status = os.waitpid(pid, 0)
+    if os.WIFEXITED(status):
+        print(
+            f"\n\t[{os.getpid()}]\tProcess {child_pid} exited with status {os.WEXITSTATUS(status)}.",
+            file=sys.stderr,
+        )
 
-    return 0;
-}
+    return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())
 ```
 :::
 ::: {.column}
